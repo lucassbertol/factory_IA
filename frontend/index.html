@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factory IA — Chat</title>
+  <meta name="description" content="Interface minimalista de chat de IA em dark mode." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- Defs de ícones SVG (referenciados via <use>) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-sparkles" viewBox="0 0 24 24">
+        <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+        <path d="M20 3v4" />
+        <path d="M22 5h-4" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 6h16" />
+        <path d="M4 12h16" />
+        <path d="M4 18h16" />
+      </symbol>
+      <symbol id="i-rotate" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </symbol>
+      <symbol id="i-bot" viewBox="0 0 24 24">
+        <path d="M12 8V4H8" />
+        <rect width="16" height="12" x="4" y="8" rx="2" />
+        <path d="M2 14h2" />
+        <path d="M20 14h2" />
+        <path d="M15 13v2" />
+        <path d="M9 13v2" />
+      </symbol>
+      <symbol id="i-chevron-down" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="i-arrow-up" viewBox="0 0 24 24">
+        <path d="m5 12 7-7 7 7" />
+        <path d="M12 19V5" />
+      </symbol>
+    </defs>
+  </svg>
+  <div class="app">
+    <!-- Overlay para mobile -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+      <div class="sidebar-top">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sparkles" /></svg></span>
+          <span class="brand-name">Factory IA</span>
+        </div>
+        <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Fechar menu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-x" /></svg></button>
+      </div>
+
+      <button class="new-chat-btn" id="newChatBtn">
+        <span class="plus" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-plus" /></svg></span>
+        Novo chat
+      </button>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-menu" /></svg></button>
+        <div class="topbar-model" title="Agente ativo (placeholder)">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span id="topbarAgentName">Agente Geral</span>
+          <span class="topbar-badge">placeholder</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="clearBtn" aria-label="Limpar conversa" title="Limpar conversa"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-rotate" /></svg></button>
+        </div>
+      </header>
+
+      <section class="messages" id="messages" aria-live="polite" aria-label="Mensagens">
+        <!-- Tela inicial / boas-vindas -->
+        <div class="welcome" id="welcome">
+          <div class="welcome-mark" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sparkles" /></svg></div>
+          <h1>Olá, como posso ajudar hoje?</h1>
+        </div>
+        <!-- Mensagens inseridas via app.js -->
+      </section>
+
+      <!-- Composer fixado -->
+      <footer class="composer-wrap">
+        <form class="composer" id="composer" autocomplete="off">
+          <div class="composer-row">
+            <div class="agent-select-wrap" title="Selecione o agente (placeholder)">
+              <span class="agent-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-bot" /></svg></span>
+              <select id="agentSelect" aria-label="Selecionar agente">
+                <option value="geral" selected>Agente Geral</option>
+                <option value="codigo">Agente Código</option>
+                <option value="escrita">Agente Escrita</option>
+                <option value="dados">Agente Dados</option>
+              </select>
+              <span class="select-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-chevron-down" /></svg></span>
+            </div>
+            <span class="composer-hint" id="charHint">Enter envia · Shift+Enter quebra linha</span>
+          </div>
+
+          <div class="composer-box">
+            <textarea
+              id="input"
+              rows="1"
+              placeholder="Digite sua mensagem..."
+              aria-label="Digite sua mensagem"
+            ></textarea>
+            <button type="submit" class="send-btn" id="sendBtn" aria-label="Enviar mensagem" title="Enviar">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-up" /></svg>
+            </button>
+          </div>
+
+          <p class="disclaimer">Frontend apenas visual — respostas são placeholders locais, sem IA real.</p>
+        </form>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
