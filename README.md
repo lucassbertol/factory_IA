@@ -1,7 +1,7 @@
 # Trabalho Final — ELC1070 Análise e Projeto de Sistemas OO
 ## Sistema Multiagente Pedagógico para Ensinar um Design Pattern
 
-> Resumo simples do PDF `AnProjOO_Trab_2026.pdf`. Nada foi removido, só foi reescrito em passo a passo.
+> Resumo simples do PDF `AnProjOO_Trab_2026.pdf`.
 
 ### Ideia geral
 Cada dupla cria um **sistema multiagente em Python** que ensina **1 padrão GoF** para um iniciante.
